@@ -255,7 +255,7 @@ namespace ErplyAPI
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var ts = (TimeSpan)value;
-            var tsString = XmlConvert.ToString(ts);
+            var tsString = ts.Hours + ":" + ts.Minutes + ":" + ts.Seconds;
             serializer.Serialize(writer, tsString);
         }
 

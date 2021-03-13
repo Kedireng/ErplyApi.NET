@@ -48,6 +48,7 @@ namespace ErplyAPI
             this.Username = username;
             this.Password = password;
             client = new HttpClient() { BaseAddress = new Uri("https://" + ClientCode.ToString() + ".erply.com/api/") };
+            client.Timeout = TimeSpan.FromMinutes(10);
             VerifyUser();
         }
         #endregion
