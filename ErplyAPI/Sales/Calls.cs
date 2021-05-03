@@ -117,5 +117,28 @@ namespace ErplyAPI.Sales
         /// If you have the Quantity Discounts module enabled, please note that each product may have multiple entries in the price list. If you want to address and update one specific rule, you also need to pass along the "amount" parameter.
         /// </summary>
         public static int SavePriceList(this Erply erply, SavePriceListSettings settings) => erply.MakeRequest<int>(settings);
+        /// <summary>
+        /// Add a new row to a price list.
+        /// To create a price list use the savePriceList API call.
+        /// If you want to remove any items from the price list, use the deleteProductInPriceList API call.
+        /// To edit products in price list use the editProductInPriceList API call.
+        /// To get the products from the price list, use the getProductsInPriceList API call.
+        /// </summary>
+        public static int AddProductToPriceList(this Erply erply, AddProductToPriceListSettings settings) => erply.MakeRequest<int>(settings);
+        /// <summary>
+        /// Edit an existing record in price list.
+        /// API call editProductInPriceList does not allow to change product ID. To switch product, the price list row should be deleted using API call deleteProductInPriceList and a new one should be added using API call addProductToPriceList.
+        /// If you need to retrieve the products that are on the price list, use the getProductsInPriceList API call.
+        /// </summary>
+        public static int EditProductInPriceList(this Erply erply, EditProductInPriceListSettings settings) => erply.MakeRequest<int>(settings);
+        /// <summary>
+        /// Returns products that are on the price list.
+        /// API user must have the view rights for all price lists.
+        /// To add a new price list, use the savePriceList API call.
+        /// If you need to add products to a price list, use the addProductToPriceList API call.
+        /// To edit products on the price list, use the editProductInPriceList API call.
+        /// To delete products from the price list, use the deleteProductInPriceList API call.
+        /// </summary>
+        public static List<ProductInPriceList> GetProductsInPriceList(this Erply erply, GetProductsInPriceListSettings settings) => erply.MakeRequest<List<ProductInPriceList>>(settings);
     }
 }

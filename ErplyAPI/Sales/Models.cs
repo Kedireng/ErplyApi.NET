@@ -2113,6 +2113,159 @@ namespace ErplyAPI.Sales
 }
 
     #endregion
+    #region AddProductToPriceList Settings
+    public class AddProductToPriceListSettings : ErplyCall
+    {
+        [JsonIgnore]
+        public override string CallName { get; set; } = "addProductToPriceList";
+        /// <summary>
+        /// Price list ID
+        /// </summary>
+        public int? PriceListID { get; set; }
+        /// <summary>
+        /// Product ID
+        /// </summary>
+        public int? ProductID { get; set; }
+        /// <summary>
+        /// Discounted net sales price for a product. Price must be a non-negative decimal. 
+        /// </summary>
+        public float? Price { get; set; }
+        /// <summary>
+        /// Available only if Quantity discounts module is enabled on your account. The quantity threshold from which the specified price will apply.
+        /// Amount must be a non-negative integer. It is not possible to add the same product with the same amount twice. 
+        /// </summary>
+        public int? Amount { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.
+        /// Subsidy must be a non-negative decimal. 
+        /// </summary>
+        public float? Subsidy { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account. 
+        /// </summary>
+        public int? SubsidyTypeID { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.
+        /// Page must be a non-negative integer. 
+        /// </summary>
+        public int? Page { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.
+        /// Position on page must be a non-negative integer. 
+        /// </summary>
+        public int? PositionOnPage { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.
+        /// Forecast units must be a non-negative integer. 
+        /// </summary>
+        public int? ForecastUnits { get; set; }
+    }
+
+    #endregion
+    #region EditProductInPriceList Settings
+
+    public class EditProductInPriceListSettings : ErplyCall
+    {
+        [JsonIgnore]
+        public override string CallName { get; set; } = "editProductInPriceList";
+        /// <summary>
+        /// Price list row ID. To get the records use the getProductsInPriceList API call. 
+        /// </summary>
+        public int? PriceListProductID { get; set; }
+        /// <summary>
+        /// Discounted net sales price for a product. Price must be a non-negative decimal. 
+        /// </summary>
+        public float? Price { get; set; }
+        /// <summary>
+        /// Available only if Quantity discounts module is enabled on your account. The quantity threshold from which the specified price will apply.
+        /// Amount must be a non-negative integer. There must not be the same product with the same amount on the price list. 
+        /// </summary>
+        public int? Amount { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.
+        /// Subsidy must be a non-negative decimal. 
+        /// </summary>
+        public float? Subsidy { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account. 
+        /// </summary>
+        public int? SubsidyTypeID { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.
+        /// Page must be a non-negative integer. 
+        /// </summary>
+        public int? Page { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.
+        /// Position on page must be a non-negative integer. 
+        /// </summary>
+        public int? PositionOnPage { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.
+        /// Forecast units must be a non-negative integer. 
+        /// </summary>
+        public int? ForecastUnits { get; set; }
+    }
+
+    #endregion
+    #region GetProductsInPriceList Settings
+
+    public class GetProductsInPriceListSettings : ErplyCall
+    {
+        [JsonIgnore]
+        public override string CallName { get; set; } = "getProductsInPriceList";
+        public int? PriceListID { get; set; }
+        /// <summary>
+        /// API returns at most recordsOnPage items at a time. To retrive the next recordsOnPage items, send a new request with pageNo incremented by one. By default, API returns "page 1". 
+        /// </summary>
+        public int? PageNo { get; set; }
+        /// <summary>
+        /// Number of records API should return. By default 20, at most 1000. 
+        /// </summary>
+        public int? RecordsOnPage { get; set; }
+    }
+
+    #endregion
+    #region ProductInPriceList
+
+    public class ProductInPriceList : ErplyItem
+    {
+        /// <summary>
+        /// ID of a price list row.  
+        /// </summary>
+        public int? PriceListProductID { get; set; }
+        public int? ProductID { get; set; }
+        /// <summary>
+        /// Discounted net sales price for a product.  
+        /// </summary>
+        public float? Price { get; set; }
+        /// <summary>
+        /// Available only if Quantity discounts module is enabled on your account. The quantity threshold from which the specified price will apply.  
+        /// </summary>
+        public int? Amount { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.  
+        /// </summary>
+        public float? Subsidy { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.  
+        /// </summary>
+        public int? SubsidyTypeID { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.  
+        /// </summary>
+        public int? Page { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.  
+        /// </summary>
+        public int? PositionOnPage { get; set; }
+        /// <summary>
+        /// Available only if Price list row subsidy and other fields module is enabled on your account.  
+        /// </summary>
+        public int? ForecastUnits { get; set; }
+    }
+
+    #endregion
 
     #region GetVatRates Settings
 
