@@ -686,9 +686,9 @@ namespace ErplyAPI
             foreach (KeyValuePair<string, string> keyValuePair in properties)
             {
                 if(keyValuePair.Value.StartsWith("["))
-                    jsonString = jsonString + @"""" + keyValuePair.Key + @""":" + keyValuePair.Value + @"";
+                    jsonString = jsonString + @"""" + keyValuePair.Key + @""":" + JsonConvert.ToString(keyValuePair.Value) + @"";
                 else
-                    jsonString = jsonString + @"""" + keyValuePair.Key + @""":""" + keyValuePair.Value + @"""";
+                    jsonString = jsonString + @"""" + keyValuePair.Key + @""":" + JsonConvert.ToString(keyValuePair.Value) + @"";
                 i++;
                 if (properties.Count != 1 && properties.Count > i)
                     jsonString = jsonString + ",";

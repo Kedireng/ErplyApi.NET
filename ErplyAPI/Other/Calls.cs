@@ -47,5 +47,10 @@ namespace ErplyAPI.Other
         /// Create or update a supplier.
         /// </summary>
         public static int SaveSupplier(this Erply erply, SaveSupplierSettings settings) => erply.MakeRequest<int>(settings);
+        /// <summary>
+        /// Get an Actual Reports HTML printout for a sales document.
+        /// Actual Reports is a visual template designer integrated into Erply. Actual Reports templates can be managed in Erply back office. Erply provides a few basic templates by default, but new ones can be designed as needed. Back office lets you download a custom printout as a PDF document; the same document in HTML format is available with this API call.
+        /// </summary>
+        public static string GetSalesDocumentActualReportsHTML(this Erply erply, GetSalesDocumentActualReportsHTMLSettings settings) => erply.MakeRequest<string>(settings);
     }
 }

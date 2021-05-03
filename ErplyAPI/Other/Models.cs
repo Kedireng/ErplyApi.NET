@@ -703,4 +703,42 @@ namespace ErplyAPI.Other
     }
 
     #endregion
+
+    #region GetSalesDocumentActualReportsHTML Settings
+
+    public class GetSalesDocumentActualReportsHTMLSettings : ErplyCall
+    {
+        [JsonIgnore]
+        public override string CallName { get; set; } = "getSalesDocumentActualReportsHTML";
+        /// <summary>
+        /// Invoice ID.
+        /// If you want to create a new invoice and also retrieve its printout with a single bulk request, set this field to a special value: "CURRENT_INVOICE_ID".
+        /// </summary>
+        public int? DocumentID { get; set; }
+        /// <summary>
+        /// Printout template ID.
+        /// You can look up template ID from back office, from the drop-down list of templates.
+        /// </summary>
+        public int? TemplateID { get; set; }
+        /// <summary>
+        /// Printout data language.
+        /// If omitted, API will return item names in the default language of your ERPLY account.
+        /// Possible values:
+        /// 'eng' - English
+        /// 'spa' - Spanish
+        /// 'ger' - German
+        /// 'swe' - Swedish
+        /// 'fin' - Finnish
+        /// 'rus' - Russian
+        /// 'est' - Estonian
+        /// 'lat' - Latvian
+        /// 'lit' - Lithuanian
+        /// 'gre' - Greek
+        /// </summary>
+        [JsonProperty("lang")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Language? Language { get; set; }
+    }
+
+    #endregion
 }
