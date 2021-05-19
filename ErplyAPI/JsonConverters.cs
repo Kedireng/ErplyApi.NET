@@ -551,7 +551,7 @@ namespace ErplyAPI
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            writer.WriteValue(((float)value).ToString("0.00"));
         }
     }
 }
