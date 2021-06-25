@@ -225,7 +225,8 @@ namespace ErplyAPI.Sales
         INVOICE,
         DOMESTIC,
         EU,
-        OUTSIDE_EU
+        OUTSIDE_EU,
+        EU_WITH_VAT
     }
     public enum SalesDocumentState
     {
