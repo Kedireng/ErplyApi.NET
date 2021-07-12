@@ -140,5 +140,12 @@ namespace ErplyAPI.Sales
         /// To delete products from the price list, use the deleteProductInPriceList API call.
         /// </summary>
         public static List<ProductInPriceList> GetProductsInPriceList(this Erply erply, GetProductsInPriceListSettings settings) => erply.MakeRequest<List<ProductInPriceList>>(settings);
+        /// <summary>
+        /// Delete products from the price list.
+        /// To add products to price list, use the addProductToPriceList API call.
+        /// To edit a product in the price list, use the editProductInPriceList API call.
+        /// To retrieve the products that are on the price list, use the getProductsInPriceList API call.
+        /// </summary>
+        public static DeleteProductInPriceListResponse DeleteProductInPriceList(this Erply erply, DeleteProductInPriceListSettings settings) => erply.MakeRequest<ProductInPriceList>(settings);
     }
 }

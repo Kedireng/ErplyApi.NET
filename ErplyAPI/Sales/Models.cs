@@ -2267,6 +2267,40 @@ namespace ErplyAPI.Sales
     }
 
     #endregion
+    #region DeleteProductInPriceList Settings
+
+    public class DeleteProductInPriceListSettings : ErplyCall
+    {
+        [JsonIgnore]
+        public override string CallName { get; set; } = "deleteProductInPriceList";
+        /// <summary>
+        /// The price list where the product rows will be deleted 
+        /// </summary>
+        public int? PriceListID { get; set; }
+        /// <summary>
+        /// The rows to be deleted from the price list. A comma-separated list, such as: 1,2,3.
+        /// You must send the IDs of price list row records — not product IDs. To find out the respective row IDs, call getProductsInPriceList first. 
+        /// </summary>
+        [JsonConverter(typeof(CommaSeparatedStringConverter))]
+        public List<int> PriceListProductIDs { get; set; }
+    }
+
+    #endregion
+    #region DeleteProductInPriceListResponse
+    public class DeleteProductInPriceListResponse : ErplyItem
+    {
+        /// <summary>
+        /// The rows that were deleted. Comma-separated list of integers.
+        /// </summary>
+        [JsonConverter(typeof(CommaSeparatedStringConverter))]
+        public List<int> DeletedIDs { get; set; }
+        /// <summary>
+        /// A comma-separated list of IDs that were not valid integers, and IDs of rows that do not exist in this price list.
+        /// </summary>
+        [JsonConverter(typeof(CommaSeparatedStringConverter))]
+        public List<int> NonExistingIDs { get; set; }
+    }
+    #endregion
 
     #region GetVatRates Settings
 
