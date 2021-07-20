@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using ErplyAPI.Company;
 using System.Security;
+using System.IO;
 
 namespace ErplyAPI
 {
@@ -576,22 +577,9 @@ namespace ErplyAPI
             ).Where(x => x.Value != null).ToDictionary(k => k.Key, v => v.Value);
 
             // Get all properties with json attributes and convert them to dictionary using Newtonsoft.Json
-            try
-            {
-                var settings = new JsonSerializerSettings()
-                {
-                    ContractResolver = new IgnoreNonJsonPropertiesResolver(),
-                    Converters = new List<JsonConverter>() { new FloatConverter() },
-                    NullValueHandling = NullValueHandling.Ignore
-                };
-                var json = JsonConvert.SerializeObject(source, settings);
-                var obj = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-
-                foreach (var kv in obj)
-                    if(!String.IsNullOrWhiteSpace(kv.Value))
-                        dict.Add(kv.Key, kv.Value);
-            }
-            catch(Exception exc) {  }
+            foreach (var prop in GetJsonProperties(source))
+                if (!String.IsNullOrWhiteSpace(prop.Value))
+                    dict.Add(prop.Key, prop.Value);
 
             var tempDict = new Dictionary<string, string>();
             foreach (var kv in dict)
@@ -630,7 +618,7 @@ namespace ErplyAPI
                                 dict.Add(kv.Key, kv.Value);
                         }
                         else
-                            dict.Add(firstCharToLower ?propertyName.First().ToString().ToUpper() + propertyName.Substring(1) : propertyName, converter.GetValue(propertyValue));
+                            dict.Add(firstCharToLower ? propertyName.First().ToString().ToUpper() + propertyName.Substring(1) : propertyName, converter.GetValue(propertyValue));
                     }
                 }
                 else if (propertyAttribute != null && propertyValue != null)
@@ -653,31 +641,50 @@ namespace ErplyAPI
 
             return dict;
         }
-        private class IgnoreNonJsonPropertiesResolver : DefaultContractResolver
+        public static IDictionary<string, string> GetJsonProperties(object source)
         {
-            public IgnoreNonJsonPropertiesResolver()
-            {
-            }
-            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
-            {
-                var allProps = base.CreateProperties(type, memberSerialization);
-
-                //Choose the properties you want to serialize/deserialize
-                var props = type.GetProperties(~BindingFlags.FlattenHierarchy).Where(x =>
-                (x.IsDefined(typeof(JsonArrayAttribute))
-                || x.IsDefined(typeof(JsonConstructorAttribute))
-                || x.IsDefined(typeof(JsonContainerAttribute))
-                || x.IsDefined(typeof(JsonConverterAttribute))
-                || x.IsDefined(typeof(JsonDictionaryAttribute))
-                || x.IsDefined(typeof(JsonExtensionDataAttribute))
-                || x.IsDefined(typeof(JsonObjectAttribute))
-                || x.IsDefined(typeof(JsonPropertyAttribute)))
+            var props = source.GetType().GetProperties(~BindingFlags.FlattenHierarchy).Where(x =>
+                x.IsDefined(typeof(JsonConverterAttribute))
                 && !x.IsDefined(typeof(JsonIgnoreAttribute))
                 && !x.IsDefined(typeof(ErplyPropertyAttribute))
                 && !x.IsDefined(typeof(ErplyConverterAttribute)));
 
-                return allProps.Where(p => props.Any(a => a.Name == p.UnderlyingName)).ToList();
+            var serializer = JsonSerializer.Create(
+                new JsonSerializerSettings()
+                {
+                    Converters = new List<JsonConverter>() { new FloatConverter() }
+                });
+
+            var serialized = new Dictionary<string, string>();
+
+            foreach (var property in props)
+            {
+                var converterData = property.GetCustomAttribute(typeof(JsonConverterAttribute), false);
+                var propertyValue = property.GetValue(source, null);
+                string propertyName = property.Name;
+
+                if (propertyValue != null)
+                {
+                    var converter = (JsonConverter)Activator.CreateInstance(((JsonConverterAttribute)converterData).ConverterType);
+
+                    var propertyValueType = propertyValue != null ? propertyValue.GetType() : null;
+                    if (propertyValue != null && converter.CanConvert(propertyValueType))
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        StringWriter sw = new StringWriter(sb);
+                        using (JsonWriter jsonWriter = new JsonTextWriter(sw))
+                        {
+                            jsonWriter.Formatting = Formatting.Indented;
+
+                            converter.WriteJson(jsonWriter, propertyValue, serializer);
+
+                            serialized.Add(propertyName, sb.ToString().Trim('"'));
+                        }
+                    }
+                }
             }
+
+            return serialized;
         }
         private static JObject CreateJsonObject(Dictionary<string, string> properties)
         {
