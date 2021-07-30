@@ -744,6 +744,14 @@ namespace ErplyAPI.Products
         /// </summary>
         public string LongdescFIN { get; set; }
         /// <summary>
+        /// Product description in Finnish (if needed besides default language), plain text.  
+        /// </summary>
+        public string DescriptionSWE { get; set; }
+        /// <summary>
+        /// Longer product description in Finnish (if needed besides default language), HTML.  
+        /// </summary>
+        public string LongdescSWE { get; set; }
+        /// <summary>
         /// Product unit cost.
         /// This is an informative, unchanging cost you can edit yourself on Erply's product card. To get real current costs for the batches in stock, use FIFOCost instead.  
         /// </summary>
