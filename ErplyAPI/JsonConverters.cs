@@ -509,12 +509,7 @@ namespace ErplyAPI
 
         public override bool CanConvert(Type objectType)
         {
-            var enumerable = objectType as System.Collections.IEnumerable;
-
-            if (enumerable != null)
-                return true;
-
-            return false;
+            return typeof(IEnumerable).IsAssignableFrom(objectType);
         }
 
         private bool IsNullableType(Type t)
