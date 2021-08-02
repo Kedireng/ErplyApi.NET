@@ -269,7 +269,7 @@ namespace ErplyAPI
                     {
                         try
                         {
-                            responses.AddRange(MakeBulkRequest(tempCalls));
+                            responses.AddRange(await MakeBulkRequestAsync(tempCalls));
                             tempCalls.Clear();
                         }
                         catch (Exception exc)
