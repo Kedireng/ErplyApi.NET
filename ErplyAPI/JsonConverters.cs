@@ -105,9 +105,9 @@ namespace ErplyAPI
         {
             if (value == null || ((IList)value).Count == 0)
                 writer.WriteNull();
-            if(value != null && typeof(IEnumerable<int>).IsAssignableFrom(value.GetType()) && ((IEnumerable<int>)value).Count() > 0)
+            if (value != null && typeof(IEnumerable<int>).IsAssignableFrom(value.GetType()) && ((IEnumerable<int>)value).Count() > 0)
                 writer.WriteValue(string.Join(",", ((IEnumerable<int>)value)));
-            else if(typeof(IEnumerable<Enum>).IsAssignableFrom(value.GetType()))
+            else if (typeof(IEnumerable).IsAssignableFrom(value.GetType()) && ((IList)value)[0].GetType().IsEnum)
             {
                 var array = new JArray();
 

@@ -196,7 +196,7 @@ namespace ErplyAPI
 
                     tempCalls.Add(call);                  
 
-                    if (tempCalls.Count == 100 || i == calls.Count)
+                    if (tempCalls.Count == 100 || i == calls.Count - 1)
                     {
                         try
                         {
@@ -644,7 +644,8 @@ namespace ErplyAPI
         public static IDictionary<string, string> GetJsonProperties(object source)
         {
             var props = source.GetType().GetProperties(~BindingFlags.FlattenHierarchy).Where(x =>
-                x.IsDefined(typeof(JsonConverterAttribute))
+                (x.IsDefined(typeof(JsonConverterAttribute))
+                || x.IsDefined(typeof(JsonPropertyAttribute)))
                 && !x.IsDefined(typeof(JsonIgnoreAttribute))
                 && !x.IsDefined(typeof(ErplyPropertyAttribute))
                 && !x.IsDefined(typeof(ErplyConverterAttribute)));
@@ -660,10 +661,11 @@ namespace ErplyAPI
             foreach (var property in props)
             {
                 var converterData = property.GetCustomAttribute(typeof(JsonConverterAttribute), false);
+                var propertyData = (JsonPropertyAttribute)property.GetCustomAttribute(typeof(JsonPropertyAttribute), false);
                 var propertyValue = property.GetValue(source, null);
                 string propertyName = property.Name;
 
-                if (propertyValue != null)
+                if (propertyValue != null && converterData != null)
                 {
                     var converter = (JsonConverter)Activator.CreateInstance(((JsonConverterAttribute)converterData).ConverterType);
 
@@ -680,6 +682,20 @@ namespace ErplyAPI
 
                             serialized.Add(propertyName, sb.ToString().Trim('"'));
                         }
+                    }
+                }
+                else if (propertyValue != null && propertyData != null)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    StringWriter sw = new StringWriter(sb);
+                    propertyName = propertyData.PropertyName;
+                    using (JsonWriter jsonWriter = new JsonTextWriter(sw))
+                    {
+                        jsonWriter.Formatting = Formatting.Indented;
+
+                        jsonWriter.WriteValue(propertyValue);
+
+                        serialized.Add(propertyName, sb.ToString().Trim('"'));
                     }
                 }
             }
