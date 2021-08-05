@@ -663,7 +663,7 @@ namespace ErplyAPI
                 var converterData = property.GetCustomAttribute(typeof(JsonConverterAttribute), false);
                 var propertyData = (JsonPropertyAttribute)property.GetCustomAttribute(typeof(JsonPropertyAttribute), false);
                 var propertyValue = property.GetValue(source, null);
-                string propertyName = property.Name;
+                string propertyName = propertyData == null ? property.Name : propertyData.PropertyName; ;
 
                 if (propertyValue != null && converterData != null)
                 {
@@ -688,7 +688,6 @@ namespace ErplyAPI
                 {
                     StringBuilder sb = new StringBuilder();
                     StringWriter sw = new StringWriter(sb);
-                    propertyName = propertyData.PropertyName;
                     using (JsonWriter jsonWriter = new JsonTextWriter(sw))
                     {
                         jsonWriter.Formatting = Formatting.Indented;
