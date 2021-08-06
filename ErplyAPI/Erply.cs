@@ -406,6 +406,43 @@ namespace ErplyAPI
             return erplyResponse;
         }
         /// <summary>
+        /// Sends requests content to Erply API and converts response into ErplyResponse.
+        /// </summary>
+        /// <exception cref="HttpRequestException">Something went wrong with web request.</exception>
+        /// <exception cref="ErplyException">Something was wrong with Erply's response.</exception>
+        /// <param name="content">Content to send to Erply API</param>
+        /// <returns>Returns Erply's response as ErplyResponse.</returns>
+        private async Task<ErplyResponse> SendContentAsync(StringContent content)
+        {
+            string response;
+
+            try
+            {
+                HttpResponseMessage result = await client.PostAsync("", content);
+                result.EnsureSuccessStatusCode();
+                response = await result.Content.ReadAsStringAsync();
+            }
+            catch (Exception exc)
+            {
+                throw new HttpRequestException("Something went wrong with web request. Maybe Erply API is down or you're not connected to internet?", exc);
+            }
+
+            if (String.IsNullOrWhiteSpace(response) || response == "null")
+                throw new ErplyException("Erply response was empty.");
+
+            ErplyResponse erplyResponse;
+            try
+            {
+                erplyResponse = JsonConvert.DeserializeObject<ErplyResponse>(response, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, Converters = new List<JsonConverter> { new FloatConverter() } });
+            }
+            catch (Exception exc)
+            {
+                throw new ErplyException("Erply response was in wrong format.", exc);
+            }
+
+            return erplyResponse;
+        }
+        /// <summary>
         /// Sends requests content to Erply API and converts response into ErplyResponse as an asynchronous operation.
         /// </summary>
         /// <exception cref="HttpRequestException">Something went wrong with web request.</exception>
@@ -521,6 +558,64 @@ namespace ErplyAPI
                     }
 
                     List<ErplyResponse> gottenResponses = MakeBulkRequest(calls);
+
+                    gottenResponses.ForEach(x => x.ValidateSuccess());
+
+                    responses.AddRange(gottenResponses);
+                    count -= gottenResponses.Count * 100;
+                }
+            }
+
+            List<T> items = new List<T>();
+
+            foreach (var response in responses)
+                items.AddRange(response.Records.ToObject<List<T>>());
+
+            return items;
+        }
+        /// <summary>
+        /// Fetch all items from erply with given settings. Settings has to have 'RecordsOnPage' and 'PageNo' properties.
+        /// </summary>
+        /// <typeparam name="T">Type which gotten items will be converted into</typeparam>
+        /// <param name="settings">Call settings which will be used</param>
+        /// <returns>Returns a list of all found items</returns>
+        public async Task<List<T>> FetchAllAsync<T>(ErplyCall settings)
+        {
+            List<ErplyResponse> responses = new List<ErplyResponse>();
+            int n = 1;
+
+            if (!settings.HasProperty("RecordsOnPage") || !settings.HasProperty("PageNo"))
+                throw new ArgumentException("Settings has to have 'RecordsOnPage' and 'PageNo' properties to fetch all items!");
+
+            Type settingsType = settings.GetType();
+            var call = (ErplyCall)settings.Clone();
+            settingsType.GetProperty("RecordsOnPage").SetValue(call, 100, null);
+            settingsType.GetProperty("PageNo").SetValue(call, 1, null);
+
+            responses.Add(await MakeRequestAsync<ErplyResponse>(call));
+
+            if (responses[0].Status.RecordsTotal.Value > 100)
+            {
+                int count = responses[0].Status.RecordsTotal.Value - 100;
+                while (count > 0)
+                {
+                    List<ErplyCall> calls = new List<ErplyCall>();
+
+                    double y = count / 100d;
+                    var pow = Math.Pow(10, 0);
+                    int c = (int)(Math.Truncate(y * pow) / pow) + 2;
+
+                    for (int i = 2; i <= c; i++)
+                    {
+                        Type settingsType1 = settings.GetType();
+                        var call1 = (ErplyCall)settings.Clone();
+                        settingsType1.GetProperty("RecordsOnPage").SetValue(call1, 100, null);
+                        settingsType1.GetProperty("PageNo").SetValue(call1, i + ((n - 1) * 100), null);
+
+                        calls.Add(call1);
+                    }
+
+                    List<ErplyResponse> gottenResponses = await MakeBulkRequestAsync(calls);
 
                     gottenResponses.ForEach(x => x.ValidateSuccess());
 
