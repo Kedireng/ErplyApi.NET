@@ -442,43 +442,6 @@ namespace ErplyAPI
 
             return erplyResponse;
         }
-        /// <summary>
-        /// Sends requests content to Erply API and converts response into ErplyResponse as an asynchronous operation.
-        /// </summary>
-        /// <exception cref="HttpRequestException">Something went wrong with web request.</exception>
-        /// <exception cref="ErplyException">Something was wrong with Erply's response.</exception>
-        /// <param name="content">Content to send to Erply API</param>
-        /// <returns>Returns Erply's response as ErplyResponse.</returns>
-        private async Task<ErplyResponse> SendContentAsync(StringContent content)
-        {
-            string response;
-
-            try
-            {
-                HttpResponseMessage result = await client.PostAsync("", content);
-                result.EnsureSuccessStatusCode();
-                response = await result.Content.ReadAsStringAsync();
-            }
-            catch (Exception exc)
-            {
-                throw new HttpRequestException("Something went wrong with web request. Maybe Erply API is down or you're not connected to internet?", exc);
-            }
-
-            if (String.IsNullOrWhiteSpace(response) || response == "null")
-                throw new ErplyException("Erply response was empty.");
-
-            ErplyResponse erplyResponse;
-            try
-            {
-                erplyResponse = JsonConvert.DeserializeObject<ErplyResponse>(response, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore, Converters = new List<JsonConverter> { new FloatConverter() } });
-            }
-            catch (Exception exc)
-            {
-                throw new ErplyException("Erply response was in wrong format.", exc);
-            }
-
-            return erplyResponse;
-        }
         private T CastErplyResponse <T>(ErplyResponse response)
         {
             if (typeof(T) == typeof(ErplyResponse))
