@@ -326,33 +326,14 @@ namespace ErplyAPI
     public class Base64Converter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            string base64String = string.Empty;
-
-            MemoryStream memoryStream = new MemoryStream();
-            ((System.Drawing.Bitmap)value).Save(memoryStream, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-            memoryStream.Position = 0;
-            byte[] byteBuffer = memoryStream.ToArray();
-
-            memoryStream.Close();
-
-            base64String = Convert.ToBase64String(byteBuffer);
-            byteBuffer = null;
-            if (!base64String.EndsWith("="))
-                base64String = base64String + "=";
-
-            writer.WriteValue("data:image/png;base64," + base64String);
-
-            /*
+        {          
             using (MemoryStream m = new MemoryStream())
             {
                 ((System.Drawing.Bitmap)value).Save(m, System.Drawing.Imaging.ImageFormat.Jpeg);
                 byte[] imageBytes = m.ToArray();
                 var base64String = Convert.ToBase64String(imageBytes, 0, imageBytes.Length);
-                writer.WriteValue("data:image/jpeg;base64," + base64String);
+                writer.WriteValue(base64String);
             }
-            */
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
