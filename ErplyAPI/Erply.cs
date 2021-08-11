@@ -173,7 +173,7 @@ namespace ErplyAPI
         /// <exception cref="HttpRequestException">Something went wrong with web request.</exception>
         /// <exception cref="ArgumentNullException">Call or call's CallName is null or empty</exception>
         /// <returns>Returns a list of all gotten responses</returns>
-        public List<ErplyResponse> MakeBulkRequest(List<ErplyCall> calls)
+        public IEnumerable<ErplyResponse> MakeBulkRequest(IEnumerable<ErplyCall> calls)
         {
             TimeSpan timeFromLastVerification = DateTime.Now.Subtract(lastVerification);
             if (timeFromLastVerification.TotalSeconds > 3600)
@@ -181,7 +181,7 @@ namespace ErplyAPI
             if (String.IsNullOrWhiteSpace(sessionKey))
                 VerifyUser();
 
-            if (calls.Count > 100)
+            if (calls.Count() > 100)
             {
                 List<ErplyCall> tempCalls = new List<ErplyCall>();
                 int i = 0;
@@ -196,7 +196,7 @@ namespace ErplyAPI
 
                     tempCalls.Add(call);                  
 
-                    if (tempCalls.Count == 100 || i == calls.Count - 1)
+                    if (tempCalls.Count == 100 || i == calls.Count() - 1)
                     {
                         try
                         {
@@ -241,7 +241,7 @@ namespace ErplyAPI
         /// <exception cref="HttpRequestException">Something went wrong with web request.</exception>
         /// <exception cref="ArgumentNullException">Call or call's CallName is null or empty</exception>
         /// <returns>Returns a list of all gotten responses</returns>
-        public async Task<List<ErplyResponse>> MakeBulkRequestAsync(List<ErplyCall> calls)
+        public async Task<IEnumerable<ErplyResponse>> MakeBulkRequestAsync(IEnumerable<ErplyCall> calls)
         {
             TimeSpan timeFromLastVerification = DateTime.Now.Subtract(lastVerification);
             if (timeFromLastVerification.TotalSeconds > 3600)
@@ -249,7 +249,7 @@ namespace ErplyAPI
             if (String.IsNullOrWhiteSpace(sessionKey))
                 VerifyUser();
 
-            if (calls.Count > 100)
+            if (calls.Count() > 100)
             {
                 List<ErplyCall> tempCalls = new List<ErplyCall>();
                 int i = 0;
@@ -265,7 +265,7 @@ namespace ErplyAPI
                     tempCalls.Add(call);
                     i++;
 
-                    if (tempCalls.Count == 100 || i == calls.Count)
+                    if (tempCalls.Count == 100 || i == calls.Count())
                     {
                         try
                         {
@@ -285,7 +285,7 @@ namespace ErplyAPI
             else
             {
                 var content = GetBulkRequestContent(calls);
-                var response = SendContent(content);
+                var response = await SendContentAsync(content);
 
                 if (response.Status.ErrorCode == 1054 || response.Status.ErrorCode == 1055)
                 {
@@ -309,7 +309,7 @@ namespace ErplyAPI
         /// </summary>
         /// <param name="calls">Erply requests to wrap into bulk request</param>
         /// <returns>Returns StringContent ready to send to Erply API.</returns>
-        private StringContent GetBulkRequestContent(List<ErplyCall> calls)
+        private StringContent GetBulkRequestContent(IEnumerable<ErplyCall> calls)
         {
             JArray jsonObjects = new JArray();
 
@@ -484,7 +484,7 @@ namespace ErplyAPI
         /// <typeparam name="T">Type which gotten items will be converted into</typeparam>
         /// <param name="settings">Call settings which will be used</param>
         /// <returns>Returns a list of all found items</returns>
-        public List<T> FetchAll<T>(ErplyCall settings)
+        public IEnumerable<T> FetchAll<T>(ErplyCall settings)
         {
             List<ErplyResponse> responses = new List<ErplyResponse>();
             int n = 1;
@@ -520,7 +520,7 @@ namespace ErplyAPI
                         calls.Add(call1);
                     }
 
-                    List<ErplyResponse> gottenResponses = MakeBulkRequest(calls);
+                    List<ErplyResponse> gottenResponses = MakeBulkRequest(calls).ToList();
 
                     gottenResponses.ForEach(x => x.ValidateSuccess());
 
@@ -578,7 +578,7 @@ namespace ErplyAPI
                         calls.Add(call1);
                     }
 
-                    List<ErplyResponse> gottenResponses = await MakeBulkRequestAsync(calls);
+                    List<ErplyResponse> gottenResponses = (await MakeBulkRequestAsync(calls)).ToList();
 
                     gottenResponses.ForEach(x => x.ValidateSuccess());
 
