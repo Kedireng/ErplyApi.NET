@@ -1600,6 +1600,7 @@ namespace ErplyAPI.Products
         /// Product group ID
         /// </summary>
         [JsonProperty("productGroupID")]
+        [ErplyProperty("productGroupID")]
         public int? ID { get; set; }
         /// <summary>
         /// Name
