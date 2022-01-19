@@ -16,4 +16,18 @@ namespace ErplyAPI
 
         public string PropertyName { get; set; }
     }
+
+    public class ErplyNullPropertyAttribute : System.Attribute
+    {
+        /// <summary>
+        /// Value to use if property value is null. (Can also be null)
+        /// </summary>
+        /// <param name="value">Value to use</param>
+        public ErplyNullPropertyAttribute(string value)
+        {
+            PropertyValue = value;
+        }
+
+        public string PropertyValue { get; set; }
+    }
 }

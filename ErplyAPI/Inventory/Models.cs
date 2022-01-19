@@ -742,17 +742,20 @@ namespace ErplyAPI.Inventory
         /// <summary>
         /// eg. 2010-01-29  
         /// </summary>
-        public string Date { get; set; }
+        [JsonConverter(typeof(ISODateConverter))]
+        public DateTime Date { get; set; }
         /// <summary>
         /// Inventory transaction date.
         /// This is the date on which the document was confirmed and when the items on this document were added into inventory, or removed from inventory. While "document date" can be edited by users at any time, "inventory transaction date" is always set by ERPLY and cannot be changed.
         /// Inventory Reports and COGS reports are based on the inventory transaction date.  
         /// </summary>
-        public string InventoryTransactionDate { get; set; }
+        [JsonConverter(typeof(ISODateConverter))]
+        public DateTime InventoryTransactionDate { get; set; }
         /// <summary>
         /// eg. 14:59:00  
         /// </summary>
-        public string Time { get; set; }
+        [JsonConverter(typeof(ISOTimeHHmmssConverter))]
+        public TimeSpan Time { get; set; }
         public int? SupplierID { get; set; }
         public string SupplierName { get; set; }
         /// <summary>
