@@ -586,7 +586,7 @@ namespace ErplyAPI.Inventory
         /// eg. 2010-01-29
         /// If omitted, date of request will be used 
         /// </summary>
-        [ErplyConverter(typeof(ISODateConverter))]
+        [JsonConverter(typeof(ISODateConverter))]
         public DateTime? Date { get; set; }
         /// <summary>
         /// eg. 14:59:00
