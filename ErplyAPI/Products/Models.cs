@@ -1291,7 +1291,7 @@ namespace ErplyAPI.Products
         /// <summary>
         /// Image ID
         /// </summary>
-        public string PictureID { get; set; }
+        public int? PictureID { get; set; }
         /// <summary>
         /// A descriptive name for the file. May be empty.
         /// </summary>

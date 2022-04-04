@@ -101,6 +101,8 @@ namespace ErplyAPI
         /// Attribute value
         /// </summary>
         [JsonProperty("attributeValue")]
+        [ErplyProperty("attributeValue")]
+        [ErplyNullProperty("undefined")]
         public string Value { get; set; }
     }
     public class LongAttribute

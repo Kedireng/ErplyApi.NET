@@ -645,10 +645,11 @@ namespace ErplyAPI
             dict = tempDict;
 
             // Get all properties with erply attributes and convert them to dictionary using their attributes
-            foreach (var property in allProperties.Where(x => x.IsDefined(typeof(ErplyConverterAttribute)) || x.IsDefined(typeof(ErplyPropertyAttribute))))
+            foreach (var property in allProperties.Where(x => x.IsDefined(typeof(ErplyConverterAttribute)) || x.IsDefined(typeof(ErplyPropertyAttribute)) || x.IsDefined(typeof(ErplyNullPropertyAttribute))))
             {
                 var converterData = property.GetCustomAttribute(typeof(ErplyConverterAttribute), false);
                 var propertyAttribute = property.GetCustomAttribute(typeof(ErplyPropertyAttribute), false);
+                var nullPropertyAttribute = property.GetCustomAttribute(typeof(ErplyNullPropertyAttribute), false);
                 var propertyValue = property.GetValue(source, null);
                 string propertyName = property.Name;
                 bool firstCharToLower = true;
@@ -694,6 +695,10 @@ namespace ErplyAPI
                     }
                     else
                         dict.Add(firstCharToLower ? propertyName.First().ToString().ToUpper() + propertyName.Substring(1) : propertyName, converter.GetValue(propertyValue));
+                }
+                else if (nullPropertyAttribute != null && propertyValue == null)
+                {
+                    dict.Add(firstCharToLower ? propertyName.First().ToString().ToUpper() + propertyName.Substring(1) : propertyName, ((ErplyNullPropertyAttribute)nullPropertyAttribute).PropertyValue);
                 }
             }
 
@@ -765,10 +770,12 @@ namespace ErplyAPI
             int i = 0;
             foreach (KeyValuePair<string, string> keyValuePair in properties)
             {
-                if(keyValuePair.Value.StartsWith("["))
+                if (keyValuePair.Value != null && keyValuePair.Value.StartsWith("["))
+                    jsonString = jsonString + @"""" + keyValuePair.Key + @""":" + JsonConvert.ToString(keyValuePair.Value) + @"";
+                else if (keyValuePair.Value != null)
                     jsonString = jsonString + @"""" + keyValuePair.Key + @""":" + JsonConvert.ToString(keyValuePair.Value) + @"";
                 else
-                    jsonString = jsonString + @"""" + keyValuePair.Key + @""":" + JsonConvert.ToString(keyValuePair.Value) + @"";
+                    jsonString = jsonString + @"""" + keyValuePair.Key + @""":null";
                 i++;
                 if (properties.Count != 1 && properties.Count > i)
                     jsonString = jsonString + ",";
