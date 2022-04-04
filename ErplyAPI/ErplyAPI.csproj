@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>$(AssemblyName).NET</PackageId>
+    <Authors>Kedireng</Authors>
+    <Company />
+    <Product>$(AssemblyName).NET</Product>
+    <RepositoryUrl>https://github.com/Kedireng/ErplyApi.NET</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>ErplyAPI.NET is a .NET library for calling Erply REST API with Auth in .NET applications. It was built with simplicity in mind and using it should need as little code as possible.</Description>
+    <Copyright>Copyright © Ingmar Olmaru 2022</Copyright>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression> MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +22,13 @@
 
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
