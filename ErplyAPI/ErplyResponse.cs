@@ -181,7 +181,7 @@ namespace ErplyAPI
         /// <summary>
         /// Request ID, used in Bulk API Calls
         /// </summary>
-        public int? RequestID { get; set; }
+        public string RequestID { get; set; }
         public string Request { get; set; }
         public int? RequestUnixTime { get; set; }
         public string ResponseStatus { get; set; }

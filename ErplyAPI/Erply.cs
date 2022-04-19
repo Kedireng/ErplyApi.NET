@@ -323,7 +323,7 @@ namespace ErplyAPI
                 Dictionary<string, string> dict = new Dictionary<string, string>();
 
                 dict["requestName"] = call.CallName;
-                if (call.CallID.HasValue) dict["requestID"] = call.CallID.Value.ToString();
+                if (call.RequestId != null) dict["requestID"] = call.RequestId;
 
                 var callDict = call.ToKeyValue().ToDictionary(k => k.Key, v => v.Value);
                 if (callDict != null && callDict.Count != 0)

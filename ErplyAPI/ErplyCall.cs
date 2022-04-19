@@ -35,7 +35,7 @@ namespace ErplyAPI
         /// Custom ID assigned to call, used with bulk API calls.
         /// </summary>
         [JsonIgnore]
-        public virtual int? CallID { get; set; }
+        public virtual string RequestId { get; set; }
         [JsonIgnore]
         public Dictionary<string, string> InputParameters { get; set; }
         /// <summary>
