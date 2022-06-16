@@ -970,6 +970,7 @@ namespace ErplyAPI.Sales
         /// Note: An unconfirmed sales invoice does not(and cannot) have a number.
         /// Another tip: when you integrate Erply with a web shop and consider using unconfirmed sales invoices, perhaps a better option would be generating sales orders instead.
         /// </summary>
+        [JsonConverter(typeof(BoolConverter))]
         public bool? ConfirmInvoice { get; set; }
         /// <summary>
         /// Assign a custom number to this sales document. As opposed to invoiceNo, this field may contain letters, spacing and punctuation.
