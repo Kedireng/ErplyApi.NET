@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+
 using ErplyAPI.Converters;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace ErplyAPI.Products
 {
@@ -1490,6 +1492,36 @@ namespace ErplyAPI.Products
         public Product Product { get; set; }
     }
     #endregion
+    #region GetProductPictures Settings
+
+    public class GetProductPicturesSettings : ErplyCall
+    {
+        [JsonIgnore]
+        public override string CallName { get; set; } = "getProductPictures";
+        /// <summary>
+        /// Retrieve one specific image by ID. 
+        /// </summary>
+        public int? ProductPictureID { get; set; }
+        /// <summary>
+        /// Retrieve all images associated with a product. 
+        /// </summary>
+        public int? ProductID { get; set; }
+        /// <summary>
+        /// Retrieve only items that have been added or modified since the specified timestamp. Use it to keep a local database in sync with ERPLY. 
+        /// </summary>
+        [JsonConverter(typeof(UnixTimestampConverter))]
+        public DateTime? ChangedSince { get; set; }
+        /// <summary>
+        /// Number of records API should return. By default 20, at most 100. 
+        /// </summary>
+        public int? RecordsOnPage { get; set; }
+        /// <summary>
+        /// API returns at most recordsOnPage items at a time. To retrive the next recordsOnPage items, send a new request with pageNo incremented by one. By default, API returns "page 1". 
+        /// </summary>
+        public int? PageNo { get; set; }
+    }
+
+    #endregion
     #region SaveProductPicture Settings
     public class SaveProductPictureSettings : ErplyCall
     {
@@ -1818,7 +1850,9 @@ namespace ErplyAPI.Products
         /// </summary>
         public string NameGRE { get; set; }
         [JsonProperty("productCategoryName")]
-        private string productCategoryName { get
+        private string productCategoryName
+        {
+            get
             {
                 return Name;
             }
@@ -1956,7 +1990,7 @@ namespace ErplyAPI.Products
     public class GetProductCostForSpecificAmountSettings : ErplyCall
     {
         public int? WarehouseID { get; set; }
-        public List<ProductAmount> ProductAmounts { get; set; } 
+        public List<ProductAmount> ProductAmounts { get; set; }
     }
     public class ProductAmount
     {
@@ -2117,7 +2151,9 @@ namespace ErplyAPI.Products
         [JsonIgnore]
         public bool UseCSVMethod { get; set; }
         [JsonProperty("responseType")]
-        private string ResponseType { get
+        private string ResponseType
+        {
+            get
             {
                 return UseCSVMethod ? "CSV" : null;
             }
@@ -2140,7 +2176,7 @@ namespace ErplyAPI.Products
     }
     #endregion
     #region ProductStock
-    public class ProductStock : ErplyItem 
+    public class ProductStock : ErplyItem
     {
         /// <summary>
         /// Product ID.  

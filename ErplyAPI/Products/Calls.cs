@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+
 using Newtonsoft.Json.Linq;
 
 namespace ErplyAPI.Products
@@ -36,7 +37,14 @@ namespace ErplyAPI.Products
         /// </summary>
         /// <param name="product">Product to create or update</param>
         /// <returns>Returns ID of the created/updated item.</returns>
-        public static int SaveProduct(this Erply erply, SaveProductSettings settings) => erply.MakeRequest<int>(settings);      
+        public static int SaveProduct(this Erply erply, SaveProductSettings settings) => erply.MakeRequest<int>(settings);
+        /// <summary>
+        /// Retrieve product pictures.
+        /// For each picture, ERPLY provides 4 URLs for 4 different image sizes. These URLs must not be hotlinked — you need to download the images to your application and serve them from there.
+        /// Access to images is currently limited and the images are not accessible by default. If you need to access the files, please contact ERPLY customer support.
+        /// The same information is also available through API call getProducts (field images), so if you need to query product information anyway, getProducts can also provide you the list of images for each product.
+        /// </summary>
+        public static List<ProductImage> GetProductPictures(this Erply erply, GetProductPicturesSettings settings) => erply.MakeRequest<List<ProductImage>>(settings);
         /// <summary>
         /// Attach a new picture to a product, or replace an existing picture.
         /// To retrieve a list of images attached to a product, call getProducts and see the element "images". To remove a picture, use deleteProductPicture.
@@ -137,25 +145,27 @@ namespace ErplyAPI.Products
         /// <returns>Returns a list of product priority groups.</returns>
         public static List<ProductStock> GetProductStock(this Erply erply, GetProductStockSettings settings)
         {
-            var records = erply.MakeRequest<JObject>(settings);
+            JObject records = erply.MakeRequest<JObject>(settings);
 
             if (records.HasValues && !settings.UseCSVMethod)
             {
-                var products = records.ToObject<List<ProductStock>>();
+                List<ProductStock> products = records.ToObject<List<ProductStock>>();
 
                 return products;
             }
-            else if(records.HasValues && settings.UseCSVMethod)
+            else if (records.HasValues && settings.UseCSVMethod)
             {
-                var link = records[0].Value<string>("reportLink");
+                string link = records[0].Value<string>("reportLink");
 
-                using (MemoryStream stream = new MemoryStream((new WebClient()).DownloadData(link)))
+                using (MemoryStream stream = new MemoryStream(new WebClient().DownloadData(link)))
                 {
                     return CSVReader.ReadCSVToObject<ProductStock>(stream);
                 }
             }
             else
+            {
                 throw new Exception("Something went wrong with GetProductStock call!");
+            }
         }
     }
 }
