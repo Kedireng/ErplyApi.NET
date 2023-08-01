@@ -10,12 +10,12 @@
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>ErplyAPI.NET is a .NET library for calling Erply REST API with Auth in .NET applications. It was built with simplicity in mind and using it should need as little code as possible.</Description>
-    <Copyright>Copyright © Ingmar Olmaru 2022</Copyright>
+    <Copyright>Copyright © Ingmar Olmaru 2023</Copyright>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression> MIT</PackageLicenseExpression>
     <AssemblyVersion>1.0.1</AssemblyVersion>
     <FileVersion>1.0.1</FileVersion>
-    <Version>1.0.3</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>

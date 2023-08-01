@@ -1492,6 +1492,53 @@ namespace ErplyAPI.Products
         public Product Product { get; set; }
     }
     #endregion
+    #region ProductPicture
+    public class ProductPicture : ErplyItem
+    {
+        /// <summary>
+        /// Image ID.  
+        /// </summary>
+        public int? ProductPictureID { get; set; }
+        /// <summary>
+        /// Product ID.  
+        /// </summary>
+        public int? ProductID { get; set; }
+        /// <summary>
+        /// A descriptive name for the file. May be empty.  
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// URL of image thumbnail (by default 100 x 100 px).  
+        /// </summary>
+        public string ThumbURL { get; set; }
+        /// <summary>
+        /// URL of a small version of the image (by default 200 x 200 px).  
+        /// </summary>
+        public string SmallURL { get; set; }
+        /// <summary>
+        /// URL of a large version of the image (by default 800 x 600 px).  
+        /// </summary>
+        public string LargeURL { get; set; }
+        /// <summary>
+        /// URL of the full-size original image.  
+        /// </summary>
+        public string FullURL { get; set; }
+        /// <summary>
+        /// A flag that indicates whether the image is stored as a local file in Erply, or as a URL to an external location, eg. a content delivery network.  
+        /// </summary>
+        [JsonConverter(typeof(BoolConverter))]
+        public bool? External { get; set; }
+        /// <summary>
+        /// A codename for the hosting provider, if the file is stored in an external location. May be empty.
+        /// This is used only for ERPLY's internal purposes, eg. to know how to remove image files from a specific CDN when the picture is removed from ERPLY.  
+        /// </summary>
+        public int? HostingProvider { get; set; }
+        [JsonConverter(typeof(UnixTimestampConverter))]
+        public DateTime? Added { get; set; }
+        public string LastModified { get; set; }
+    }
+
+    #endregion
     #region GetProductPictures Settings
 
     public class GetProductPicturesSettings : ErplyCall

@@ -44,7 +44,7 @@ namespace ErplyAPI.Products
         /// Access to images is currently limited and the images are not accessible by default. If you need to access the files, please contact ERPLY customer support.
         /// The same information is also available through API call getProducts (field images), so if you need to query product information anyway, getProducts can also provide you the list of images for each product.
         /// </summary>
-        public static List<ProductImage> GetProductPictures(this Erply erply, GetProductPicturesSettings settings) => erply.MakeRequest<List<ProductImage>>(settings);
+        public static List<ProductPicture> GetProductPictures(this Erply erply, GetProductPicturesSettings settings) => erply.MakeRequest<List<ProductPicture>>(settings);
         /// <summary>
         /// Attach a new picture to a product, or replace an existing picture.
         /// To retrieve a list of images attached to a product, call getProducts and see the element "images". To remove a picture, use deleteProductPicture.
