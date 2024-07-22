@@ -1532,7 +1532,7 @@ namespace ErplyAPI.Products
         /// A codename for the hosting provider, if the file is stored in an external location. May be empty.
         /// This is used only for ERPLY's internal purposes, eg. to know how to remove image files from a specific CDN when the picture is removed from ERPLY.  
         /// </summary>
-        public int? HostingProvider { get; set; }
+        public string HostingProvider { get; set; }
         [JsonConverter(typeof(UnixTimestampConverter))]
         public DateTime? Added { get; set; }
         public string LastModified { get; set; }
